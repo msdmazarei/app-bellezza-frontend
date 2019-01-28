@@ -1,0 +1,53 @@
+.InstaCard {
+    direction: rtl;
+    width: 80%;
+    align-content: center;
+    background-color: white;
+    border-radius: 10px;
+    /* margin: 20px; */
+    // max-height: 300px;
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-top: 15px;
+    .header {
+        padding: 10px;
+        .UserAvatar{
+            display: inline;
+            span {
+                padding-right: 0.5em;
+            }
+        }
+        .top-menu {
+            float: left;
+        }
+    }
+    .insta-images{
+        // .image-content{
+            
+        //     max-height: 300px;
+        //     text-align: center;
+        //     img{
+        //         max-height: 300px;
+        //     }
+        // }
+
+    }
+    .title_desc {
+
+        h5{
+            font-size: medium;
+
+        }
+        p{
+            font-size: small;
+            margin: 10px;
+        }
+        .actions {
+            display: inline;
+            float: left;
+            .ons-icon{
+                margin: 5px;
+            }
+        }
+    }
+}

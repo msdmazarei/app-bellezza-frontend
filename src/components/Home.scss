@@ -1,0 +1,65 @@
+.Home {
+    .primary-tag {
+        border-radius: 8px;
+        display: block;
+        width: 90%;
+        height: 150px;
+        background-color: white;
+        margin: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+        padding-bottom: 10px;
+        border-style: outset;
+
+        .msd-right{
+            display: inline;
+            float: right;
+            text-align: center;
+            h2 {
+                text-align: center;
+                width: 100%;
+                margin: 5px;
+            }
+            img {
+                max-height: 100px;
+            }
+            width: 50%
+    
+        }
+        .msd-left{
+            text-align: right;
+            text-justify: distribute-all-lines;
+            width: 50%;
+            float: left;
+
+            p{
+                padding: 10px;
+                text-align: right;
+                font-size: small;
+                
+            }
+
+        }
+    }
+    .card {
+        text-align: center;
+        img{
+            max-height: 100px;
+        }
+    }
+}
+
+.msd-main-menu{
+    .list{
+    .list-header{
+        loat: right;
+        width: 100%;
+        text-align: right;    }
+    .list-item{
+        span{
+            width:90%;
+            text-align: right;
+        }
+    }
+}
+}
