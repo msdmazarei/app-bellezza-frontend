@@ -16,7 +16,7 @@ import { SpeedDials } from './SpeedDials';
 import { ITag } from '../models/tag';
 import { tag_repo } from '../repositories/tag_repo';
 import { SpecTagPage } from './SpecTagPage';
-import { redux_state } from '../redux/store';
+import { redux_state } from '../redux/app_state';
 import { action_open_app_sidebar, action_close_app_sidebar } from '../redux/Actions/app_sidebar';
 import { Dispatch } from 'redux';
 

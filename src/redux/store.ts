@@ -1,18 +1,17 @@
-import {createStore, ReducersMapObject, AnyAction,combineReducers} from 'redux'
+import { createStore, ReducersMapObject, AnyAction, combineReducers } from 'redux'
 import { IUser } from '../models/user';
-import {reducer as UserReducer} from './reducers/user'
-import {reducer as LoginDialogReducer} from './reducers/logindialog'
-import {reducer as AppSideBarReducer} from './reducers/app_sidebar'
-export interface redux_state {
-    signin_dialog_is_shown: boolean
-    logged_in_user: IUser
-    is_app_sidebar_open: boolean
-}
+import { reducer as UserReducer } from './reducers/user'
+import { reducer as LoginDialogReducer } from './reducers/logindialog'
+import { reducer as AppSideBarReducer } from './reducers/app_sidebar'
+import { reducer as ForgetPasswordReducer } from './reducers/forget_password'
+import { redux_state } from './app_state';
 
-const reducers : ReducersMapObject<redux_state, AnyAction> = {
- signin_dialog_is_shown: LoginDialogReducer,
- logged_in_user: UserReducer, 
- is_app_sidebar_open: AppSideBarReducer
+
+const reducers: ReducersMapObject<redux_state, AnyAction> = {
+    signin_dialog_is_shown: LoginDialogReducer,
+    logged_in_user: UserReducer,
+    is_app_sidebar_open: AppSideBarReducer,
+    forget_password: ForgetPasswordReducer
 
 }
 

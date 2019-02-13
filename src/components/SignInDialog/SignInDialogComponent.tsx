@@ -5,10 +5,12 @@ import { MobileNoInput } from '../FormsInputs/ValidableInput/MobileNoInput';
 import { ValidableInput } from '../FormsInputs/ValidableInput/ValidableInput';
 import { PasswordInput } from '../FormsInputs/ValidableInput/PasswordInput';
 import './signindialog.scss'
-import { redux_state } from '../../redux/store';
+import { redux_state } from '../../redux/app_state';
 import { Dispatch } from 'redux';
 import { action_close_app_sidebar } from '../../redux/Actions/app_sidebar';
 import { connect } from 'react-redux';
+import { ForgetPasswordDialog } from '../ForgetPasswordDialog/ForgetPasswordDialog';
+import { action_open_forget_password_dialog } from '../../redux/Actions/forget_password';
 export interface IState {
     username: {
         is_valid: boolean
@@ -28,6 +30,7 @@ export interface IProps {
     onClose?: () => void
     doLogin?: (username: string, password: string) => Promise<IUser>
     close_app_sidebar?: () => void
+    show_forget_password_dialog?: () => void
 
 }
 
@@ -64,13 +67,17 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
     async login() {
 
     }
+    forget_password(){
+        this.onClose()
+        this.props.show_forget_password_dialog && this.props.show_forget_password_dialog()
+    }
     render() {
         return (
 
             <Dialog
                 isOpen={this.props.show}
                 onCancel={this.onClose.bind(this)}
-                
+
                 className="sign-in-dialog"
             >
 
@@ -78,10 +85,14 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
                     <h3>ورود</h3>
                     <MobileNoInput name="username" onValidatedChange={this.forminput_valuechange.bind(this)} required label="شماره همراه"></MobileNoInput>
                     <PasswordInput name="password" onValidatedChange={this.forminput_valuechange.bind(this)} required label="کامه عبور"></PasswordInput>
+                    <a onClick={this.forget_password.bind(this)} className="i-forget-my-pass"> رمز عبورم را فراموش کرده ام.</a>
+
                     <div className="login-form-buttons">
                         <Button disabled={!this.state.is_login_form_valid} onClick={this.login.bind(this)}>ورود</Button>
                         <Button onClick={this.onClose.bind(this)}>بازگشت</Button>
                     </div>
+
+                    {/* <ForgetPasswordDialog></ForgetPasswordDialog> */}
                 </Page>
             </Dialog>
 
@@ -96,8 +107,8 @@ const state2props = (state: redux_state) => {
 
 const dispatch2props = (dispatch: Dispatch) => {
     return {
-        close_app_sidebar: () => dispatch(action_close_app_sidebar())
-
+        close_app_sidebar: () => dispatch(action_close_app_sidebar()),
+        show_forget_password_dialog: () => dispatch(action_open_forget_password_dialog())
     }
 }
 

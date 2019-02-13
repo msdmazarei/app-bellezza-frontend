@@ -5,8 +5,9 @@ import { Page, List, ListHeader, ListItem, Icon } from 'react-onsenui';
 import { LoginDialog } from '../SignInDialog/SignInDialogComponent';
 import { action_login_dialog_closed, action_show_login_dialog } from '../../redux/Actions/login';
 import { EACTIONS } from '../../redux/ActionsEnum';
-import { redux_state } from '../../redux/store';
+import { redux_state } from '../../redux/app_state';
 import { action_close_app_sidebar } from '../../redux/Actions/app_sidebar';
+import { ForgetPasswordDialog } from '../ForgetPasswordDialog/ForgetPasswordDialog';
 
 
 export interface IProps { 
@@ -50,6 +51,7 @@ class Component extends React.Component<IProps, IState> {
                 </List>
 
                 <LoginDialog show={this.props.signin_dialog_is_shown} onClose={this.props.dialog_closed}></LoginDialog>
+                <ForgetPasswordDialog></ForgetPasswordDialog>
             </Page>
         )
     }

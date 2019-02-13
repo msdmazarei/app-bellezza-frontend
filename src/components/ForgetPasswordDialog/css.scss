@@ -1,0 +1,21 @@
+.forget-password-dialog{
+ .dialog{
+    height: 300px;
+    text-align: center;  
+    direction: rtl;
+    .description {
+        font-size: x-small;
+        padding: 10px;
+        justify-content: stretch;
+        text-align: justify;
+    }
+ }   
+ .login-form-buttons{
+    position: fixed;
+    width: 100%; 
+    bottom: 10px;
+    .button {
+        margin: 10px;
+    }
+ }
+}
