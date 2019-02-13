@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { Navigator } from 'react-onsenui';
-import {Tabs} from './Tabs';
+import { Provider } from 'react-redux'
+import { Store } from '../redux/store'
+import { Tabs } from './Tabs';
 import { SpecTagPage } from './SpecTagPage';
-export class App extends React.Component <any,any>{
+export class App extends React.Component<any, any>{
 
     renderPage(route: any, navigator: any) {
-        console.log("route ",route,"key:",route.props.key);
+        console.log("route ", route, "key:", route.props.key);
         debugger;
         route.props = route.props || {};
         route.props.navigator = navigator;
@@ -15,16 +17,19 @@ export class App extends React.Component <any,any>{
 
     render() {
         return (
-            <Navigator
-                initialRoute={
-                    { comp: Tabs, props: { key: 'tabs' } }
-                    // { comp: SpecTagPage, props: { tag:{}, key: 'tabs' } }
-                }
-                renderPage={this.renderPage}
-                
-            >
-            
-            </Navigator>
+            <Provider store={Store}>
+                <Navigator
+                    initialRoute={
+                        { comp: Tabs, props: { key: 'tabs' } }
+                        // { comp: SpecTagPage, props: { tag:{}, key: 'tabs' } }
+                    }
+                    renderPage={this.renderPage}
+
+                >
+
+                </Navigator>
+            </Provider>
+
         );
     }
 }

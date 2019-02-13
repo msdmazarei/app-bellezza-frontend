@@ -5,32 +5,38 @@ import { Page, List, ListHeader, ListItem, Navigator } from 'react-onsenui'
 import { Splitter, SplitterSide, SplitterContent } from 'react-onsenui';
 import { Toolbar, ToolbarButton, Icon } from 'react-onsenui';
 import { Card } from 'react-onsenui';
+import {connect, MapStateToProps, MapDispatchToProps} from 'react-redux'
 const initialPlatform = ons.platform.isAndroid() ? 'android' : 'ios';
 
 import { PullToRefresh } from './PullToRefresh';
 import { InfiniteScroll } from './InfiniteScroll';
-import { SideMenu } from './SideMenu';
+import { SideMenu } from './BSideMenu/SideMenu';
 import { FloatingActionButton } from './FloatingActionButton';
 import { SpeedDials } from './SpeedDials';
 import { ITag } from '../models/tag';
 import { tag_repo } from '../repositories/tag_repo';
 import { SpecTagPage } from './SpecTagPage';
+import { redux_state } from '../redux/store';
+import { action_open_app_sidebar, action_close_app_sidebar } from '../redux/Actions/app_sidebar';
+import { Dispatch } from 'redux';
 
 export interface IHomeState {
   primary_tags: Array<ITag>
-  isOpen: boolean
 }
 
 export interface IHomeProps {
-  navigator: Navigator
+  navigator: Navigator,
+  is_app_sidebar_open?: boolean
+  open_app_sidebar?: () => void
+  close_app_sidebar?: () => void
 }
 
-export class Home extends React.Component<IHomeProps, IHomeState> {
+export class Component extends React.Component<IHomeProps, IHomeState> {
 
   constructor(props: IHomeProps) {
     console.log("props:", props)
     super(props);
-    this.state = { isOpen: false, primary_tags: [] };
+    this.state = { primary_tags: [] };
 
 
   }
@@ -44,23 +50,13 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
     this.setState(new_state);
   }
 
-  show() {
-    this.setState({
-      isOpen: true
-    });
-  }
-
 
 
   gotoComponent(component: any, key: any) {
     this.props.navigator.pushPage({ comp: component, props: { key } });
   }
 
-  hide() {
-    this.setState({
-      isOpen: false
-    });
-  }
+
 
   renderToolbar() {
 
@@ -68,7 +64,7 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
       <Toolbar>
         <div className='center'>خانه</div>
         <div className='right'>
-          <ToolbarButton onClick={this.show.bind(this)}>
+          <ToolbarButton onClick={this.props.open_app_sidebar}>
             <Icon icon='ion-navicon, material:md-menu' />
           </ToolbarButton>
         </div>
@@ -90,36 +86,13 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
       <Splitter>
         <SplitterSide
           side='right'
-          isOpen={(this.state as any).isOpen}
-          onClose={this.hide.bind(this)}
-          onOpen={this.show.bind(this)}
+          isOpen={this.props.is_app_sidebar_open}
+          onClose={this.props.close_app_sidebar}
+          onOpen={this.props.open_app_sidebar}
           collapse={true}
           width={240}
           swipeable={true}>
-          <Page className="msd-main-menu">
-            <List>
-              <ListHeader>منوی اصلی</ListHeader>
-              <ListItem key="login">
-                <Icon className="fa-sign-in-alt" ></Icon>
-                <span>ورود</span>
-              </ListItem>
-              <ListItem>
-                <Icon className="fa-user-plus"></Icon>
-                <span>ثبت نام</span>
-              </ListItem>
-
-              <ListItem>
-                <Icon className="fa-info-circle"></Icon>
-                <span> درباره ما</span>
-              </ListItem>
-
-            </List>
-            {/* <List
-              dataSource={["ورود", "ثبت نام", "سفارش", "درباره ما"]}
-              renderHeader={() => <ListHeader>Menu</ListHeader>}
-              renderRow={(i) => <ListItem key={`${i}`} modifier='longdivider' tappable>{i}</ListItem>}
-            /> */}
-          </Page>
+          <SideMenu></SideMenu>
         </SplitterSide>
         <SplitterContent>
 
@@ -152,3 +125,23 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
   }
 }
 
+
+
+
+const dispatch2props: MapDispatchToProps<{}, {}> = (dispatch: Dispatch) => {
+  return {
+    open_app_sidebar: () => dispatch(action_open_app_sidebar()),
+    close_app_sidebar: () => dispatch(action_close_app_sidebar())
+      
+  }
+}
+
+const state2props: MapStateToProps<{ is_app_sidebar_open?: boolean }, { is_app_sidebar_open?: boolean }, redux_state> = (state: redux_state) => {
+  return {
+      is_app_sidebar_open: state.is_app_sidebar_open
+  }
+}
+
+
+
+export const Home =connect(state2props,dispatch2props) (Component);

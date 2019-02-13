@@ -11,9 +11,13 @@
   "dependencies": {
     "@types/react": "^16.7.20",
     "@types/react-dom": "^16.0.11",
+    "@types/react-redux": "^7.0.1",
+    "@types/redux": "^3.6.0",
     "onsenui": "^2.10.6",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
     "@types/react-onsenui": "^2.9.8",

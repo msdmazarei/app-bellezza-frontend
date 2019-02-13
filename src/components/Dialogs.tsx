@@ -13,6 +13,8 @@ import {
 } from 'react-onsenui';
 
 import {Popovers} from './Popovers';
+import { MobileNoInput } from './FormsInputs/ValidableInput/MobileNoInput';
+import { LoginDialog } from './SignInDialog/SignInDialogComponent';
 
 export class Dialogs extends React.Component<any,any> {
   constructor(props: any) {
@@ -44,6 +46,7 @@ export class Dialogs extends React.Component<any,any> {
   render() {
     return (
       <Page renderToolbar={this.renderToolbar}>
+      <MobileNoInput name="mobile" label="mobile no"></MobileNoInput>
         <List
           dataSource={[
             <ListItem
@@ -90,7 +93,7 @@ export class Dialogs extends React.Component<any,any> {
           renderRow={(row) => row}
         />
 
-        <Dialog
+        {/* <Dialog
           isOpen={(this.state as any).dialogOpen}
           onCancel={this.toggleDialog.bind(this)}
           >
@@ -98,7 +101,9 @@ export class Dialogs extends React.Component<any,any> {
           <p style={{textAlign: 'center'}}>
             <Button disabled={!(this.state as any).dialogOpen} onClick={this.toggleDialog.bind(this)}>Close me!</Button>
           </p>
-        </Dialog>
+        </Dialog> */}
+
+        <LoginDialog show={(this.state as any).dialogOpen} onClose={this.toggleDialog.bind(this)}></LoginDialog>
       </Page>
     );
   }

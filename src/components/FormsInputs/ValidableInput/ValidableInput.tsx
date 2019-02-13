@@ -40,16 +40,18 @@ class DefinedComponent extends React.Component<IProps, IState> {
         debugger;
         let new_state = { ...this.state }
 
+        const new_value = e.target.value
         const is_valid = (this.props.validator_function !== null ? this.props.validator_function(e) : true) && e.target.checkValidity()
         if (this.state.old_validation_result !== is_valid) {
-            if (this.props.onValidatedChange)
-                this.props.onValidatedChange(e, is_valid)
-            new_state = { ...new_state, old_validation_result: is_valid, value: e.target.value }
+
+            this.props.onValidatedChange && this.props.onValidatedChange(e, is_valid)
+            new_state = { ...new_state, old_validation_result: is_valid}
         }
 
 
-        new_state = { ...new_state, value: e.target.value }
+        new_state = { ...new_state, value: new_value }
         if (this.props.onChange) this.props.onChange(e)
+        console.log(new_state)
         this.setState(new_state)
 
     }
@@ -59,9 +61,18 @@ class DefinedComponent extends React.Component<IProps, IState> {
 
         if (this.state.old_validation_result == false)
             classnames = classnames + ' error';
+
+        classnames = classnames.replace('validable-input', '') + ' validable-input'
         debugger;
         return (
-            <Input {...this.props} value={this.state.value} className={classnames} onChange={this.on_element_change.bind(this)} float></Input>
+            <Input
+                {...this.props}
+                value={this.state.value}
+                className={classnames}
+                onChange={this.on_element_change.bind(this)}
+                float
+                modifier='material'>
+            </Input>
         )
 
     }

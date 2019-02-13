@@ -1,0 +1,16 @@
+.sign-in-dialog .dialog{
+    height: 300px;
+    text-align: center;
+    direction: rtl;
+
+    .login-form-buttons{
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+
+        .button {
+            width: 40%;
+            margin: 10px;
+        }
+    }
+}
