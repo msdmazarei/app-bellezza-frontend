@@ -1,15 +1,22 @@
 import * as React from 'react';
-import { Page, List, ListHeader, ListItem } from 'react-onsenui'
+import { Page, List, ListHeader, ListItem, Navigator } from 'react-onsenui'
 import { Splitter, SplitterSide, SplitterContent } from 'react-onsenui';
 import { Toolbar, ToolbarButton, Icon } from 'react-onsenui';
+import { SideMenu } from './BSideMenu/SideMenu';
 
 export interface IGeneralPageState {
-    isOpen: boolean
     page_title: string
     page_name: string
 }
 
-export class GeneralPage<P, S extends IGeneralPageState> extends React.Component<P, S> {
+export interface IGeneralPageProps {
+    navigator: Navigator
+    is_app_sidebar_open?: boolean
+    open_app_sidebar?: () => void
+    close_app_sidebar?: () => void
+}
+
+export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageState> extends React.Component<P, S> {
 
     constructor(props: P) {
         super(props);
@@ -17,18 +24,11 @@ export class GeneralPage<P, S extends IGeneralPageState> extends React.Component
 
     show() {
 
-        this.setState({
-            ...this.state,
-            isOpen: true
-        });
+       this.props.open_app_sidebar && this.props.open_app_sidebar()
     }
 
     hide() {
-        debugger;
-        this.setState({
-            ...this.state,
-            isOpen: false
-        });
+       this.props.close_app_sidebar && this.props.close_app_sidebar()
     }
 
     get_internal_page_content(): React.ReactElement<any> {
@@ -61,31 +61,13 @@ export class GeneralPage<P, S extends IGeneralPageState> extends React.Component
                 <Splitter>
                     <SplitterSide
                         side='right'
-                        isOpen={(this.state as any).isOpen}
-                        onClose={this.hide.bind(this)}
-                        onOpen={this.show.bind(this)}
+                        isOpen={this.props.is_app_sidebar_open}
+                        // onClose={this.props.close_app_sidebar}
+                        // onOpen={this.props.open_app_sidebar}
                         collapse={true}
                         width={240}
                         swipeable={true}>
-                        <Page className="msd-main-menu">
-                            <List>
-                                <ListHeader>منوی اصلی</ListHeader>
-                                <ListItem key="login">
-                                    <Icon className="fa-sign-in-alt" ></Icon>
-                                    <span>ورود</span>
-                                </ListItem>
-                                <ListItem key="signup">
-                                    <Icon className="fa-user-plus"></Icon>
-                                    <span>ثبت نام</span>
-                                </ListItem>
-
-                                <ListItem key="about-us">
-                                    <Icon className="fa-info-circle"></Icon>
-                                    <span> درباره ما</span>
-                                </ListItem>
-
-                            </List>
-                        </Page>
+                        <SideMenu navigator={this.props.navigator}></SideMenu>
                     </SplitterSide>
                     <SplitterContent>
                         <Page renderToolbar={this.renderToolbar.bind(this)} className={this.state.page_name}>

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Dialog, Page, Button } from 'react-onsenui'
+import {notification} from 'onsenui';
 import { IUser } from '../../models/user';
 import { MobileNoInput } from '../FormsInputs/ValidableInput/MobileNoInput';
 import { ValidableInput } from '../FormsInputs/ValidableInput/ValidableInput';
@@ -11,6 +12,9 @@ import { action_close_app_sidebar } from '../../redux/Actions/app_sidebar';
 import { connect } from 'react-redux';
 import { ForgetPasswordDialog } from '../ForgetPasswordDialog/ForgetPasswordDialog';
 import { action_open_forget_password_dialog } from '../../redux/Actions/forget_password';
+import { user_repo } from '../../repositories/user_repo';
+import { action_user_logged_in } from '../../redux/Actions/user';
+import { toast_error } from '../../utils';
 export interface IState {
     username: {
         is_valid: boolean
@@ -23,14 +27,21 @@ export interface IState {
     }
 
     is_login_form_valid: boolean
+    waiting_to_server_response: boolean
+
+    server_exception: {
+        show: boolean
+        message: string
+    }
 
 }
 export interface IProps {
     show?: boolean
     onClose?: () => void
-    doLogin?: (username: string, password: string) => Promise<IUser>
     close_app_sidebar?: () => void
     show_forget_password_dialog?: () => void
+    onUserLoggedIn?: (user: IUser) => void
+
 
 }
 
@@ -41,7 +52,12 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
         this.state = {
             username: this.init_field(),
             password: this.init_field(),
-            is_login_form_valid: null
+            is_login_form_valid: null,
+            waiting_to_server_response: false,
+            server_exception: {
+                show: false,
+                message: ''
+            }
         }
     }
 
@@ -65,9 +81,23 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
     }
 
     async login() {
+        try {
+            debugger;
+            this.setState({ ...this.state, waiting_to_server_response: true })
+            let user: IUser = await user_repo.authenticate(this.state.username.value, this.state.password.value)
+            this.setState({ ...this.state, waiting_to_server_response: false })
+            this.props.onUserLoggedIn && this.props.onUserLoggedIn(user)
+            this.props.onClose && this.props.onClose()
+        } catch (e) {
+            toast_error(e)
+            this.setState({
+                ...this.state, waiting_to_server_response: false,
+            })
+
+        }
 
     }
-    forget_password(){
+    forget_password() {
         this.onClose()
         this.props.show_forget_password_dialog && this.props.show_forget_password_dialog()
     }
@@ -88,11 +118,12 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
                     <a onClick={this.forget_password.bind(this)} className="i-forget-my-pass"> رمز عبورم را فراموش کرده ام.</a>
 
                     <div className="login-form-buttons">
-                        <Button disabled={!this.state.is_login_form_valid} onClick={this.login.bind(this)}>ورود</Button>
+                        <Button disabled={!this.state.is_login_form_valid || this.state.waiting_to_server_response} onClick={this.login.bind(this)}>ورود</Button>
                         <Button onClick={this.onClose.bind(this)}>بازگشت</Button>
                     </div>
 
                     {/* <ForgetPasswordDialog></ForgetPasswordDialog> */}
+                    {/* <Toast isOpen={this.state.server_exception.show}>{this.state.server_exception.message}</Toast> */}
                 </Page>
             </Dialog>
 
@@ -108,7 +139,8 @@ const state2props = (state: redux_state) => {
 const dispatch2props = (dispatch: Dispatch) => {
     return {
         close_app_sidebar: () => dispatch(action_close_app_sidebar()),
-        show_forget_password_dialog: () => dispatch(action_open_forget_password_dialog())
+        show_forget_password_dialog: () => dispatch(action_open_forget_password_dialog()),
+        onUserLoggedIn: (user: IUser) => dispatch(action_user_logged_in(user))
     }
 }
 

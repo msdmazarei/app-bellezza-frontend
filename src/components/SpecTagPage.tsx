@@ -21,7 +21,6 @@ export class SpecTagPage extends GeneralPage<ISpecTagPageProps, ISpecTagPageStat
     constructor(props: ISpecTagPageProps) {
         super(props)
         this.state = {
-            isOpen: false,
             page_title: "صفحه تگ",
             page_name: "tag_page",
             loaded_posts: []

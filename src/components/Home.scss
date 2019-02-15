@@ -63,3 +63,11 @@
     }
 }
 }
+.toast {
+    background: red;
+}
+.toast__message {
+    text-align: center;
+    direction: rtl;
+    font-size: large;
+}

@@ -37,7 +37,7 @@ class DefinedComponent extends React.Component<IProps, IState> {
     }
 
     on_element_change(e: React.ChangeEvent<any>) {
-        debugger;
+        // debugger;
         let new_state = { ...this.state }
 
         const new_value = e.target.value
@@ -51,7 +51,6 @@ class DefinedComponent extends React.Component<IProps, IState> {
 
         new_state = { ...new_state, value: new_value }
         if (this.props.onChange) this.props.onChange(e)
-        console.log(new_state)
         this.setState(new_state)
 
     }
@@ -63,7 +62,7 @@ class DefinedComponent extends React.Component<IProps, IState> {
             classnames = classnames + ' error';
 
         classnames = classnames.replace('validable-input', '') + ' validable-input'
-        debugger;
+        // debugger;
         return (
             <Input
                 {...this.props}
