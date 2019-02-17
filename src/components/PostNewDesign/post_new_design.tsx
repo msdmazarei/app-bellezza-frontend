@@ -9,6 +9,10 @@ import { Dispatch } from 'redux';
 import { action_open_app_sidebar, action_close_app_sidebar } from '../../redux/Actions/app_sidebar';
 import { redux_state } from '../../redux/app_state';
 import { connect } from 'react-redux';
+import ReactImageUploadComponent from 'react-images-upload'
+import { ImageInput } from '../FormsInputs/ValidableInput/ImageUploader';
+
+
 export interface ISpecTagPageState extends IGeneralPageState {
     title: {
         is_valid: boolean,
@@ -20,7 +24,10 @@ export interface ISpecTagPageState extends IGeneralPageState {
         value: string
     },
 
-    images: []
+    images: {
+        is_valid: boolean,
+        value: Array<any>
+    }
 }
 
 export interface IProps extends IGeneralPageProps {
@@ -42,13 +49,22 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
                 is_valid: null,
                 value: null
             },
-            images: []
+            images: {
+                is_valid: null,
+                value: []
+            }
         }
     }
 
+    // onDrop(picture: any) {
+    //     this.setState({
+    //         ...this.state,
+    //         pictures: this.state.pictures.concat(picture),
+    //     });
+    // }
 
     form_input_validation_changed(e: React.ChangeEvent<any>, is_valid: boolean) {
-
+        debugger;
     }
 
     get_internal_page_content(): React.ReactElement<any> {
@@ -69,6 +85,28 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
                     value={this.state.description.value}
                     type="textarea"
                 ></ValidableInput>
+
+                <ImageInput
+                    label="بازگذاری تصاویر"
+                    onValidatedChange={this.form_input_validation_changed.bind(this)}
+                    name="images"
+                >
+
+                </ImageInput>
+                {/* <ReactImageUploadComponent 
+                 withPreview
+                 withIcon={false}
+                 buttonText="انتخاب تصاویر"
+                 label="برروی دکمه زیر کلیک کنید و از میان تصاویر موجود روی دستگاه تان عکس هایی را که می خواهید بارگذاری کنید."
+                 fileSizeError="حجم عکس انتخابی بیش از مقدار مجاز است."
+                 fileTypeError="این قالب عکس پشتیبانی نمی شود"
+                 onChange={this.onDrop.bind(this)}
+                 imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                 maxFileSize={5242880}
+                 className="msd-upload-image"
+                >
+
+                </ReactImageUploadComponent> */}
 
 
             </div>

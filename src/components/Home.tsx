@@ -16,10 +16,11 @@ import { SpeedDials } from './SpeedDials';
 import { ITag } from '../models/tag';
 import { tag_repo } from '../repositories/tag_repo';
 import { SpecTagPage } from './SpecTagPage';
-import { redux_state } from '../redux/app_state';
+import { redux_state, COMPONENT_ROUTE_NAME } from '../redux/app_state';
 import { action_open_app_sidebar, action_close_app_sidebar } from '../redux/Actions/app_sidebar';
 import { Dispatch } from 'redux';
 import { IGeneralPageState, IGeneralPageProps, GeneralPage } from './GeneralPage';
+import { action_change_route, IRouteConfig } from '../redux/Actions/route';
 
 export interface IHomeState extends IGeneralPageState {
   primary_tags: Array<ITag>
@@ -77,10 +78,15 @@ export class Component extends GeneralPage<IHomeProps, IHomeState> {
 
   on_card_click(tag: ITag) {
     debugger;
-    this.props.navigator.pushPage({
-      comp: SpecTagPage,
-      props: { tag: tag, key: "jafar" }
+
+    this.props.change_app_route && this.props.change_app_route({
+      target_component: COMPONENT_ROUTE_NAME.SPEC_TAG_ITEMS,
+      props: { tag: tag }
     })
+    // this.props.navigator.pushPage({
+    //   comp: SpecTagPage,
+    //   props: { tag: tag, key: "jafar" }
+    // })
   }
   get_internal_page_content(): React.ReactElement<any> {
     debugger;
@@ -142,7 +148,7 @@ export class Component extends GeneralPage<IHomeProps, IHomeState> {
 const dispatch2props: MapDispatchToProps<{}, {}> = (dispatch: Dispatch) => {
   return {
     open_app_sidebar: () => dispatch(action_open_app_sidebar()),
-    close_app_sidebar: () => dispatch(action_close_app_sidebar())
+    close_app_sidebar: () => dispatch(action_close_app_sidebar()),
 
   }
 }

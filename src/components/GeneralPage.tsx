@@ -3,6 +3,8 @@ import { Page, List, ListHeader, ListItem, Navigator } from 'react-onsenui'
 import { Splitter, SplitterSide, SplitterContent } from 'react-onsenui';
 import { Toolbar, ToolbarButton, Icon } from 'react-onsenui';
 import { SideMenu } from './BSideMenu/SideMenu';
+import { COMPONENT_ROUTE_NAME } from '../redux/app_state';
+import { IRouteConfig } from '../redux/Actions/route';
 
 export interface IGeneralPageState {
     page_title: string
@@ -14,6 +16,7 @@ export interface IGeneralPageProps {
     is_app_sidebar_open?: boolean
     open_app_sidebar?: () => void
     close_app_sidebar?: () => void
+    change_app_route?: (route_config:IRouteConfig) => void
 }
 
 export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageState> extends React.Component<P, S> {
@@ -57,20 +60,24 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
     render() {
         debugger;
         return (
-            <Page>
+            <Page >
                 <Splitter>
                     <SplitterSide
                         side='right'
                         isOpen={this.props.is_app_sidebar_open}
-                        // onClose={this.props.close_app_sidebar}
+                        onClose={this.props.close_app_sidebar}
                         // onOpen={this.props.open_app_sidebar}
                         collapse={true}
                         width={240}
                         swipeable={true}>
-                        <SideMenu navigator={this.props.navigator}></SideMenu>
+                        <SideMenu navigator={this.props.navigator} change_app_route={this.props.change_app_route}></SideMenu>
                     </SplitterSide>
                     <SplitterContent>
-                        <Page renderToolbar={this.renderToolbar.bind(this)} className={this.state.page_name}>
+                        <Page 
+                        renderToolbar={this.renderToolbar.bind(this)} 
+                        className={this.state.page_name}
+                        
+                        >
                             {this.get_internal_page_content()}
                         </Page>
                     </SplitterContent>

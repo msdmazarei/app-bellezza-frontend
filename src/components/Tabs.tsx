@@ -6,12 +6,18 @@ import {  Home} from './Home'
 import {Dialogs} from './Dialogs';
 import {Forms} from './Forms'
 import {Animations} from './Animations';
+import { IRouteConfig } from "../redux/Actions/route";
 
-export class Tabs extends React.Component <any,any>{
+export interface IProps {
+  navigator: Navigator
+  change_app_route: (route: IRouteConfig)=> void
+}
+
+export class Tabs extends React.Component <IProps,any>{
     renderTabs() {
       return [
         {
-          content: <Home key="home" navigator={(this.props as any).navigator} />,
+          content: <Home key="home" navigator={(this.props as any).navigator} change_app_route={this.props.change_app_route} />,
           tab: <Tab key="home" label="طرح ها" icon="ion-ios-home-outline" />
         },
         {

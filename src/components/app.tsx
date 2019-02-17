@@ -4,30 +4,14 @@ import { Provider } from 'react-redux'
 import { Store } from '../redux/store'
 import { Tabs } from './Tabs';
 import { SpecTagPage } from './SpecTagPage';
+import { AppRouter } from './app_router';
 export class App extends React.Component<any, any>{
 
-    renderPage(route: any, navigator: any) {
-        console.log("route ", route, "key:", route.props.key);
-        debugger;
-        route.props = route.props || {};
-        route.props.navigator = navigator;
-
-        return React.createElement(route.comp, route.props);
-    }
 
     render() {
         return (
             <Provider store={Store}>
-                <Navigator
-                    initialRoute={
-                        { comp: Tabs, props: { key: 'tabs' } }
-                        // { comp: SpecTagPage, props: { tag:{}, key: 'tabs' } }
-                    }
-                    renderPage={this.renderPage}
-
-                >
-
-                </Navigator>
+                <AppRouter></AppRouter>
             </Provider>
 
         );

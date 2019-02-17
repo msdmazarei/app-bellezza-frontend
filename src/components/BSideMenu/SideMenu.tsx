@@ -5,13 +5,14 @@ import { Page, List, ListHeader, ListItem, Icon, Navigator } from 'react-onsenui
 import { LoginDialog } from '../SignInDialog/SignInDialogComponent';
 import { action_login_dialog_closed, action_show_login_dialog } from '../../redux/Actions/login';
 import { EACTIONS } from '../../redux/ActionsEnum';
-import { redux_state } from '../../redux/app_state';
+import { redux_state, COMPONENT_ROUTE_NAME } from '../../redux/app_state';
 import { action_close_app_sidebar } from '../../redux/Actions/app_sidebar';
 import { ForgetPasswordDialog } from '../ForgetPasswordDialog/ForgetPasswordDialog';
 import { IUser } from '../../models/user';
 import { action_user_logged_out } from '../../redux/Actions/user';
 import { toast_error, toast_message } from '../../utils';
 import { user_repo } from '../../repositories/user_repo';
+import { IRouteConfig } from '../../redux/Actions/route';
 // import { PostNewDesign } from '../PostNewDesign/post_new_design';
 
 
@@ -22,7 +23,8 @@ export interface IProps {
     dialog_closed?: () => void,
     show_signin_dialog?: () => void
     close_app_sidebar?: () => void
-    do_logout?: () => void
+    do_logout?: () => void,
+    change_app_route: (route: IRouteConfig)=> void
 }
 export interface IState { }
 
@@ -53,22 +55,11 @@ class Component extends React.Component<IProps, IState> {
     }
 
     goto_post_new_design() {
-        debugger;
-        const routes = this.props.navigator.routes;
-
-        if (routes && routes.length > 0) {
-            const last_route = routes[routes.length - 1]
-            if (last_route.props.key == "post-new-design") {
-                action_close_app_sidebar();
-                return;
-            }
-        }
-        this.props.navigator.pushPage({
-            comp: null,
-            props: { key: "post-new-design" }
+        this.props.change_app_route && this.props.change_app_route({
+            target_component: COMPONENT_ROUTE_NAME.POST_NEW_DESIGN,
+            props: {}
         })
-        action_close_app_sidebar();
-
+        this.close_app_sidebar()
     }
 
     render() {

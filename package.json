@@ -13,9 +13,11 @@
     "@types/react-dom": "^16.0.11",
     "@types/react-redux": "^7.0.1",
     "@types/redux": "^3.6.0",
+    "file-loader": "^3.0.1",
     "onsenui": "^2.10.6",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-images-upload": "^1.2.6",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1"
   },
