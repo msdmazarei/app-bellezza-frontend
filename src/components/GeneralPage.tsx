@@ -82,6 +82,7 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
                         </Page>
                     </SplitterContent>
                 </Splitter>
+                
             </Page>
         );
     }

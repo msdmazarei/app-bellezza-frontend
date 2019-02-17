@@ -1,7 +1,7 @@
 import * as ons from 'onsenui';
 import * as React from 'react';
 
-import { Navigator } from 'react-onsenui'
+import { Navigator, BottomToolbar, Button} from 'react-onsenui'
 import { ninvoke } from 'q';
 import { IGeneralPageState, GeneralPage, IGeneralPageProps } from '../GeneralPage';
 import { ValidableInput } from '../FormsInputs/ValidableInput/ValidableInput';
@@ -11,6 +11,8 @@ import { redux_state } from '../../redux/app_state';
 import { connect } from 'react-redux';
 import ReactImageUploadComponent from 'react-images-upload'
 import { ImageInput } from '../FormsInputs/ValidableInput/ImageUploader';
+import { Z_FIXED } from 'zlib';
+import { FooterButtons } from '../FooterButtons/index';
 
 
 export interface ISpecTagPageState extends IGeneralPageState {
@@ -92,7 +94,10 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
                     name="images"
                 >
 
+                
+
                 </ImageInput>
+                <div style={{height:"100px"}}></div>
                 {/* <ReactImageUploadComponent 
                  withPreview
                  withIcon={false}
@@ -108,6 +113,10 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
 
                 </ReactImageUploadComponent> */}
 
+                <FooterButtons>
+                    <Button>ذخیره</Button>
+                    <Button>بازگشت</Button>
+                </FooterButtons>
 
             </div>
         )
