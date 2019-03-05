@@ -91,7 +91,7 @@ export class Component extends GeneralPage<IHomeProps, IHomeState> {
   get_internal_page_content(): React.ReactElement<any> {
     debugger;
     return (
-      <div>
+      <div className="Home">
         {
           this.state.primary_tags.map(x =>
             (

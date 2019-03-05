@@ -13,17 +13,22 @@ import { action_user_logged_out } from '../../redux/Actions/user';
 import { toast_error, toast_message } from '../../utils';
 import { user_repo } from '../../repositories/user_repo';
 import { IRouteConfig } from '../../redux/Actions/route';
+import { SignUpDialog } from '../SignUpDialog/SignUpDialogComponent';
+import { action_close_signup_dialog, action_show_signup_dialog } from '../../redux/Actions/signup';
 // import { PostNewDesign } from '../PostNewDesign/post_new_design';
 
 
 export interface IProps {
     navigator: Navigator,
     signin_dialog_is_shown?: boolean,
+    signup_dialog_is_shown?: boolean,
     logged_in_user?: IUser,
     dialog_closed?: () => void,
+    signup_dialog_close?: () => void,
     show_signin_dialog?: () => void
     close_app_sidebar?: () => void
     do_logout?: () => void,
+    open_signup_dialog?: () => void,
     change_app_route: (route: IRouteConfig)=> void
 }
 export interface IState { }
@@ -37,6 +42,10 @@ class Component extends React.Component<IProps, IState> {
     login_menu() {
         this.props.close_app_sidebar && this.props.close_app_sidebar()
         this.props.show_signin_dialog && this.props.show_signin_dialog()
+    }
+    open_signup_dialog() {
+        this.props.close_app_sidebar && this.props.close_app_sidebar()
+        this.props.open_signup_dialog && this.props.open_signup_dialog()
     }
 
     async logout_menu() {
@@ -69,7 +78,7 @@ class Component extends React.Component<IProps, IState> {
                 <Icon className="fa-sign-in-alt" ></Icon>
                 <span>ورود</span>
             </ListItem>,
-            <ListItem key="register">
+            <ListItem key="register" onClick={this.open_signup_dialog.bind(this)}>
                 <Icon className="fa-user-plus"></Icon>
                 <span>ثبت نام</span>
             </ListItem>,
@@ -114,6 +123,7 @@ class Component extends React.Component<IProps, IState> {
                 </List>
 
                 <LoginDialog show={this.props.signin_dialog_is_shown} onClose={this.props.dialog_closed}></LoginDialog>
+                <SignUpDialog show={this.props.signup_dialog_is_shown}></SignUpDialog>
                 <ForgetPasswordDialog></ForgetPasswordDialog>
             </Page>
         )
@@ -127,13 +137,15 @@ const dispatch2props: MapDispatchToProps<{}, {}> = (dispatch: Dispatch) => {
         dialog_closed: () => dispatch(action_login_dialog_closed()),
         show_signin_dialog: () => dispatch(action_show_login_dialog()),
         close_app_sidebar: () => dispatch(action_close_app_sidebar()),
-        do_logout: () => dispatch(action_user_logged_out())
+        do_logout: () => dispatch(action_user_logged_out()),
+        open_signup_dialog: () => dispatch(action_show_signup_dialog())
     }
 }
 
 const state2props = (state: redux_state) => {
     return {
         signin_dialog_is_shown: state.signin_dialog_is_shown,
+        signup_dialog_is_shown: state.signup_dialog_is_shown,
         logged_in_user: state.logged_in_user
     }
 }

@@ -3,21 +3,19 @@ import { ValidableInput } from './ValidableInput'
 
 interface IState { }
 export interface IProps {
-    required?: boolean
     onValidatedChange?: (e: React.ChangeEvent, is_valid: boolean) => void
-    onChange?: (e: React.ChangeEvent<any>) => void
     value?: string
     name: string
     label?: string,
-    readOnly? : boolean
+    required? : boolean
 }
 
-export class MobileComponent extends React.Component<IProps, IState> {
+export class ActiveCodeComponent extends React.Component<IProps, IState> {
 
 
     is_valid(e: React.ChangeEvent<any>): boolean {
         const value: string = e.target.value || '';
-        return /^09[0123][0-9]{8}$/.test(value)
+        return /^[0-9]{4}$/.test(value)
         // return value.length == 10;
     }
     render() {
@@ -28,4 +26,4 @@ export class MobileComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const MobileNoInput = MobileComponent;
+export const ActiveCode = ActiveCodeComponent;

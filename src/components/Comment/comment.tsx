@@ -18,7 +18,9 @@ export class Comment extends React.Component<IProps, IState>{
     render() {
         return (
             <div className="Comment">
-                <UserAvatar model={this.props.model.creator} view_type={UserViewType.avatar_username}></UserAvatar>
+                <UserAvatar
+                 model={this.props.model.creator} 
+                 view_type={UserViewType.avatar_username}></UserAvatar>
                 <p>
                     {this.props.model.text}
                 </p>

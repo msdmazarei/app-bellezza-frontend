@@ -11,6 +11,7 @@ export interface IProps {
     label?: string
     name: string,
     onValidatedChange?: (e: React.ChangeEvent, is_valid: boolean) => void
+    onChange?: (e: React.ChangeEvent) => void
 }
 
 class UploadImageComponent extends React.Component<IProps, IState> {
@@ -29,11 +30,14 @@ class UploadImageComponent extends React.Component<IProps, IState> {
         });
         this.props.onValidatedChange && this.props.onValidatedChange(
             { target: { name: this.props.name, value: picture } } as any as React.ChangeEvent, true)
+        this.props.onChange && this.props.onChange(
+            { target: { name: this.props.name, value: picture } } as any as React.ChangeEvent
+        )
     }
 
     render() {
         return (
-            <ReactImageUploadComponent 
+            <ReactImageUploadComponent
                 withPreview
                 withIcon={false}
                 buttonText={this.props.label}

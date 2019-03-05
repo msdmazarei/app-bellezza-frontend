@@ -1,0 +1,17 @@
+.sign-up-dialog .dialog{
+    height: 450px;
+    text-align: center;
+    direction: rtl;
+
+    .buttons{
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+
+        .button {
+            width: 40%;
+            margin: 10px;
+        }
+    }
+   
+}

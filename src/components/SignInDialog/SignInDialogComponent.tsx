@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Dialog, Page, Button } from 'react-onsenui'
-import {notification} from 'onsenui';
+import { notification } from 'onsenui';
 import { IUser } from '../../models/user';
 import { MobileNoInput } from '../FormsInputs/ValidableInput/MobileNoInput';
 import { ValidableInput } from '../FormsInputs/ValidableInput/ValidableInput';
@@ -14,7 +14,7 @@ import { ForgetPasswordDialog } from '../ForgetPasswordDialog/ForgetPasswordDial
 import { action_open_forget_password_dialog } from '../../redux/Actions/forget_password';
 import { user_repo } from '../../repositories/user_repo';
 import { action_user_logged_in } from '../../redux/Actions/user';
-import { toast_error } from '../../utils';
+import { toast_error, toast_message } from '../../utils';
 export interface IState {
     username: {
         is_valid: boolean
@@ -73,7 +73,7 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
         let nstate = { ...this.state }
         const fieldname: "username" | "password" = e.target.name;
         nstate[fieldname].value = e.target.value
-        nstate[fieldname].is_valid = is_valid
+        nstate[fieldname].is_valid = is_valid || nstate[fieldname].is_valid
         nstate.is_login_form_valid = nstate.username.is_valid && nstate.password.is_valid
 
         this.setState(nstate)
@@ -88,6 +88,7 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
             this.setState({ ...this.state, waiting_to_server_response: false })
             this.props.onUserLoggedIn && this.props.onUserLoggedIn(user)
             this.props.onClose && this.props.onClose()
+            toast_message(`${user.name} تبریک! شما وارد شدید.`, 3000)
         } catch (e) {
             toast_error(e)
             this.setState({
@@ -114,7 +115,10 @@ class LoginDialogComponent extends React.Component<IProps, IState> {
                 <Page>
                     <h3>ورود</h3>
                     <MobileNoInput name="username" onValidatedChange={this.forminput_valuechange.bind(this)} required label="شماره همراه"></MobileNoInput>
-                    <PasswordInput name="password" onValidatedChange={this.forminput_valuechange.bind(this)} required label="کامه عبور"></PasswordInput>
+                    <PasswordInput name="password"
+                        onValidatedChange={this.forminput_valuechange.bind(this)}
+                        onChange={this.forminput_valuechange.bind(this)}
+                        required label="کامه عبور"></PasswordInput>
                     <a onClick={this.forget_password.bind(this)} className="i-forget-my-pass"> رمز عبورم را فراموش کرده ام.</a>
 
                     <div className="login-form-buttons">

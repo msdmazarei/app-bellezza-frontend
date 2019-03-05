@@ -55,12 +55,18 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
             </Toolbar>
         );
     }
-
+    on_infinit_scroll(){
+        if ('onInfiniteScroll' in this) {
+            (this as any).onInfiniteScroll.apply(arguments)
+        }
+    }
 
     render() {
         debugger;
         return (
-            <Page >
+            <Page 
+            
+            >
                 <Splitter>
                     <SplitterSide
                         side='right'

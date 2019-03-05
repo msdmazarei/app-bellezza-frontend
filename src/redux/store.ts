@@ -2,6 +2,7 @@ import { createStore, ReducersMapObject, AnyAction, combineReducers } from 'redu
 import { IUser } from '../models/user';
 import { reducer as UserReducer } from './reducers/user'
 import { reducer as LoginDialogReducer } from './reducers/logindialog'
+import { reducer as SignUpDialogReducer} from './reducers/signup'
 import { reducer as AppSideBarReducer } from './reducers/app_sidebar'
 import { reducer as ForgetPasswordReducer } from './reducers/forget_password'
 import {reducer as RouteReducer} from './reducers/route'
@@ -13,7 +14,8 @@ const reducers: ReducersMapObject<redux_state, AnyAction> = {
     logged_in_user: UserReducer,
     is_app_sidebar_open: AppSideBarReducer,
     forget_password: ForgetPasswordReducer,
-    current_route: RouteReducer
+    current_route: RouteReducer,
+    signup_dialog_is_shown: SignUpDialogReducer
 }
 
 const main_reducer = combineReducers(reducers)

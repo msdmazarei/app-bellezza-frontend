@@ -5,6 +5,7 @@ interface IState { }
 export interface IProps {
     required?: boolean
     onValidatedChange?: (e: React.ChangeEvent, is_valid: boolean) => void
+    onChange?: (e: React.ChangeEvent<any>) => void
     value?: string
     name: string
     label?: string

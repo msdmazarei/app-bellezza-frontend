@@ -1,13 +1,18 @@
 .InstaCard {
+
     direction: rtl;
+    // width: 80%;
+    max-width: 500px;
     width: 80%;
+    height: 500px;
+
     align-content: center;
     background-color: white;
     border-radius: 10px;
     /* margin: 20px; */
     // max-height: 300px;
-    margin-right: 10%;
-    margin-left: 10%;
+    margin-right: auto;
+    margin-left: auto;
     margin-top: 15px;
     .header {
         padding: 10px;
@@ -22,6 +27,19 @@
         }
     }
     .insta-images{
+        direction: ltr;
+        height: 300px;
+         .ons-swiper{
+             height: 300px;
+
+            .image-content{
+                text-align: center;
+                width:100%;
+                img{
+                        height: 300px;
+                }
+            }
+         }
         // .image-content{
             
         //     max-height: 300px;

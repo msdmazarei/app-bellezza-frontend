@@ -54,6 +54,13 @@ class DefinedComponent extends React.Component<IProps, IState> {
         this.setState(new_state)
 
     }
+    componentDidUpdate(oldProps:IProps) {
+        if(this.props.value!=oldProps.value){
+            this.setState({
+                value: this.props.value
+            })
+        }
+    }
     render() {
         let classnames = this.props.className || '';
         classnames = classnames.replace('error', '')
@@ -66,7 +73,7 @@ class DefinedComponent extends React.Component<IProps, IState> {
         return (
             <Input
                 {...this.props}
-                value={this.state.value}
+                value={ this.state.value}
                 className={classnames}
                 onChange={this.on_element_change.bind(this)}
                 float

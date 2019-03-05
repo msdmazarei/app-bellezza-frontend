@@ -37,7 +37,7 @@ export class Tabs extends React.Component <IProps,any>{
     render() {
         return (
           <Page>
-            <Tabbar index={1}
+            <Tabbar index={0}
               renderTabs={this.renderTabs.bind(this)}
               
             />
