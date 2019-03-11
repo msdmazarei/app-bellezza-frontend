@@ -44,14 +44,14 @@ class Component extends GeneralPage<IProps, IState> {
     async componentDidMount() {
         // return ;
         // debugger;
-        let comments = []
-        if (this.state.mode == LOAD_MODE.backward) {
-            comments = await post_repo.get_before_comments_for_post(this.state.max_unixepoch, 100, this.props.model)
+        let comments : Array<comment>= []
+        // if (this.state.mode == LOAD_MODE.backward) {
+        //     comments = await post_repo.get_before_comments_for_post(this.state.max_unixepoch, 100, this.props.model)
 
-        } else {
-            comments = await post_repo.get_after_comments_for_post(this.state.min_unixepoch, 100, this.props.model)
+        // } else {
+        //     comments = await post_repo.get_after_comments_for_post(this.state.min_unixepoch, 100, this.props.model)
 
-        }
+        // }
         this.setState({ ...this.state, loaded_comments: comments })
     }
     // renderRow() {

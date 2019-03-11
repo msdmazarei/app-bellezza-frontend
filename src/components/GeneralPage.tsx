@@ -40,7 +40,10 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
             <div></div>
         )
     }
-
+    back(){
+      
+        this.props.navigator.popPage()
+    }
     renderToolbar() {
 
         return (
@@ -50,6 +53,14 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
                     <ToolbarButton onClick={this.show.bind(this)}>
                         <Icon icon='ion-navicon, material:md-menu' />
                     </ToolbarButton>
+                </div>
+                <div className="left" >
+                {this.props.navigator.routes.length>1 && 
+                
+                <ToolbarButton onClick={this.back.bind(this)}>
+                        <Icon icon='fa-arrow-left' />
+                </ToolbarButton>  }
+                
                 </div>
 
             </Toolbar>

@@ -84,7 +84,10 @@ class Component extends React.Component<IProps, IState> {
                 initialRoute={
                     {
                         comp: Tabs,
-                        props: { change_app_route: this.change_route.bind(this) }
+                        props: { 
+                            change_app_route: this.change_route.bind(this), 
+                            
+                         }
                     }
                 }
                 renderPage={this.renderPage}

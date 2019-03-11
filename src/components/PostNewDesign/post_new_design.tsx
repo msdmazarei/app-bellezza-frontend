@@ -16,6 +16,15 @@ import { FooterButtons } from '../FooterButtons/index';
 import { toast_error, toast_message } from '../../utils';
 import { post_repo } from '../../repositories/post_repo';
 import { IUser } from '../../models/user';
+import { WithContext as ReactTags } from 'react-tag-input';
+import { tag_repo } from '../../repositories/tag_repo';
+import { TagSelection } from '../FormsInputs/ValidableInput/tag_selection';
+
+const KeyCodes = {
+    comma: 188,
+    enter: 13,
+};
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 
 export interface ISpecTagPageState extends IGeneralPageState {
@@ -32,14 +41,26 @@ export interface ISpecTagPageState extends IGeneralPageState {
     images: {
         is_valid: boolean,
         value: Array<any>
+    },
+    categories: {
+        is_valid: boolean,
+        value: Array<IIdText>
     }
 
     is_form_valid: boolean
     wait_to_server_response: boolean
+
+    available_categories: Array<IIdText>
 }
 
 export interface IProps extends IGeneralPageProps {
     LoggedInUser: IUser
+}
+
+interface IIdText {
+    id: string,
+    text: string
+
 }
 
 export class Component extends GeneralPage<IProps, ISpecTagPageState> {
@@ -61,8 +82,30 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
                 is_valid: null,
                 value: []
             },
+            categories: {
+                is_valid: null,
+                value: []
+            },
+            available_categories: [],
             is_form_valid: null,
             wait_to_server_response: false
+        }
+    }
+
+    async componentDidMount() {
+        try {
+            let cats = await tag_repo.get_primary_tags()
+            this.setState({
+                ...this.state,
+                available_categories: cats.map(x => {
+                    return {
+                        id: x.id,
+                        text: x.title
+                    } as IIdText
+                })
+            })
+        } catch (e) {
+            toast_error(e)
         }
     }
 
@@ -77,11 +120,11 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
         console.log("forminput_valuechange called.")
         debugger;
         let nstate = { ...this.state }
-        const fieldname: "title" | "description" | "images" = e.target.name;
+        const fieldname: "title" | "description" | "images" | "categories" = e.target.name;
         nstate[fieldname].value = e.target.value
         nstate[fieldname].is_valid = is_valid || nstate[fieldname].is_valid
         nstate.is_form_valid = this.state.title.is_valid && this.state.images.is_valid &&
-            (this.state.images.value || []).length > 0
+            (this.state.images.value || []).length > 0 && (this.state.categories.value || []).length > 0
         this.setState(nstate)
     }
     async save() {
@@ -91,7 +134,7 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
             const res = await post_repo.new_post(this.props.LoggedInUser,
                 this.state.title.value,
                 this.state.description.value,
-                this.state.images.value)
+                this.state.images.value,this.state.categories.value)
             toast_message("پست جدید با موفقیت ذخیره شد.", 3000)
             this.setState({ ...this.state, wait_to_server_response: false })
 
@@ -100,6 +143,7 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
             toast_error(e)
         }
     }
+
     get_internal_page_content(): React.ReactElement<any> {
         return (
             <div>
@@ -123,6 +167,18 @@ export class Component extends GeneralPage<IProps, ISpecTagPageState> {
 
                     type="textarea"
                 ></ValidableInput>
+
+                <TagSelection
+                    name="categories"
+                    label="شاخه ها"
+                    suggestions={this.state.available_categories}
+                    value={this.state.categories.value}
+                    onChange={this.form_input_validation_changed.bind(this)}
+                >
+
+
+                </TagSelection>
+
 
                 <ImageInput
                     label="بازگذاری تصاویر"

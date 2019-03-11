@@ -63,9 +63,16 @@
         .actions {
             display: inline;
             float: left;
+            .red-text {
+                color: red;
+            }
             .ons-icon{
                 margin: 5px;
+                .likes_numbers {
+                    margin: 5px;
+                }
             }
+           
         }
     }
 }
