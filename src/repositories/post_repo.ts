@@ -26,6 +26,34 @@ export class post_repo extends base_repo {
         }
         return rtn
     }
+
+    static server_comment_to_client(x: any) {
+        const rtn = {...x, text: x.message, create_unixepoch: x.creation_date}
+        return rtn
+    }
+
+    static async get_post_comments(user: IUser, forward: boolean, from_unixepoch: number,count:number, post: Post): Promise<Array<comment>> {
+        try {
+            const type = forward ? "up" : "down"
+            let res = await axios.post("/api/comments/_search", {
+                post_id: post.id,
+                count: count,
+                time: from_unixepoch,
+                scroll: type
+            }, post_repo.auth_config(user))
+            if (is_ok_response(res.status)) {
+                return res.data.result.map((x: any) => this.server_comment_to_client(x))
+            } else {
+                throw internal_server_error()
+            }
+        } catch (e) {
+            const err: AxiosError = e
+            if (err.response.status == 400) throw general_error(400, "bad_request", "داده ی ارسال شده به سرور صحیح نیست ")
+            if (err.response.status == 401) throw unauth_error()
+            if (err.response.status > 499) throw internal_server_error()
+        }
+
+    }
     // static async get_post__(forward:boolean, from_unixepoch: number, count:number, tag:ITag):Promise<Array<Post>> {
     //     let rtn : Array<Post> =[]     
     //     const inc = forward ? 1 : -1
@@ -50,14 +78,29 @@ export class post_repo extends base_repo {
     //     return rtn;
 
     // }
-    static async get_post(forward: boolean, from_unixepoch: number, n: number, tag: ITag): Promise<Array<Post>> {
+    static async send_comment(user: IUser, post: Post, message: string): Promise<comment> {
+        try {
+            let result = await axios.post("/api/comments", {
+                post_id: post.id,
+                message: message
+            }, post_repo.auth_config(user))
+            if (is_ok_response(result.status)) {
+                return result.data
+            }
+            throw internal_server_error()
+        } catch (e) {
+            post_repo.general_http_exception(e as AxiosError)
+        }
+    }
+    static async get_post(forward: boolean, from_unixepoch: number, n: number, tag: ITag, user: IUser): Promise<Array<Post>> {
+        debugger;
         try {
             const type = forward ? "up" : "down"
             let res = await axios.post("/api/posts/category", {
                 category: [tag.title],
                 count: 7, time: from_unixepoch,
                 scroll: type
-            })
+            }, post_repo.auth_config(user))
             if (is_ok_response(res.status)) {
                 return res.data.result.map((x: any) => this.server_post_to_client(x))
             } else {
@@ -166,22 +209,9 @@ export class post_repo extends base_repo {
 
         }
     }
-    static general_http_exception(e: AxiosError) {
-        if (e.response.status == 401) throw unauth_error()
-        if (e.response.status == 400) throw general_error(400, "bad_request", "داده ارسالی به سرور صحیح نیست")
-        if (e.response.status > 499) throw internal_server_error()
-        if (e.response.status == 404) throw general_error(404, "NOTFOUND", "یافت نشد")
-    }
-    static auth_config(user: IUser) {
-        return {
-            auth: {
-                username: user.username,
-                password: user.password
-            }
-        }
-    }
-    static async like(user: IUser, post: Post): Promise<boolean> {
     
+    static async like(user: IUser, post: Post): Promise<boolean> {
+
         try {
             let result = await axios.post("/api/likes", {
                 "post_id": post.id
@@ -192,7 +222,6 @@ export class post_repo extends base_repo {
                 throw internal_server_error()
             }
         } catch (e) {
-
             post_repo.general_http_exception(e as AxiosError)
         }
     }

@@ -6,6 +6,11 @@ import { Comment } from '../Comment/comment'
 import { post_repo } from '../../repositories/post_repo';
 // import * as InfiniteScroll from 'react-infinite-scroller'
 import * as InfiniteScroll from 'react-infinite-scroll-component';
+import { toast_message, toast_error } from '../../utils';
+import { IUser } from '../../models/user';
+import { LeaveComment } from '../Comment/leave_comment';
+
+import './index.scss'
 
 enum LOAD_MODE {
     backward,
@@ -22,7 +27,8 @@ export interface IState extends IGeneralPageState {
 
 }
 export interface IProps extends IGeneralPageProps {
-    model: model
+    model: model,
+    user: IUser
 }
 
 class Component extends GeneralPage<IProps, IState> {
@@ -44,7 +50,7 @@ class Component extends GeneralPage<IProps, IState> {
     async componentDidMount() {
         // return ;
         // debugger;
-        let comments : Array<comment>= []
+        let comments = await post_repo.get_post_comments(this.props.user, false, Date.now(), 10, this.props.model)
         // if (this.state.mode == LOAD_MODE.backward) {
         //     comments = await post_repo.get_before_comments_for_post(this.state.max_unixepoch, 100, this.props.model)
 
@@ -62,24 +68,46 @@ class Component extends GeneralPage<IProps, IState> {
     //     else
     //     return null;
     // }
-    loadFunc(page_no: number) {
-        debugger;
-        console.log("load more function called.")
-        // if (page_no == this.state.loaded_page_no) {
-        //     return;
-        // }
+    onlyUnique(value: any, index: number, self: any) {
+        return self.indexOf(value) === index;
+    }
+    async loadFunc() {
+        const last_creation_date = Math.min.apply(null, this.state.loaded_comments.map(x => x.create_unixepoch)
+        )
+        try {
+            const res = await post_repo.get_post_comments(this.props.user, false, last_creation_date || Date.now(), 5, this.props.model)
+            const new_loaded_post = [... this.state.loaded_comments, ...res]
+            const u_new_loaded_post = new_loaded_post.filter(this.onlyUnique);
+            this.setState({
+                ...this.state, loaded_comments: u_new_loaded_post
+            })
+        } catch (e) {
+            toast_error(e)
+        }
 
-        const items = post_repo.fake_comments(page_no * 10000, 10)
-        let old_arr = Array.from(this.state.loaded_comments)
 
-        items.forEach(x => {
-            old_arr.push(x)
-        })
-        // const new_items = this.state.loaded_comments.push.apply(items)
-        this.setState({
-            loaded_comments: old_arr,
-            loaded_page_no: page_no
-        })
+
+
+
+
+
+        // debugger;
+        // console.log("load more function called.")
+        // // if (page_no == this.state.loaded_page_no) {
+        // //     return;
+        // // }
+
+        // const items = post_repo.fake_comments(page_no * 10000, 10)
+        // let old_arr = Array.from(this.state.loaded_comments)
+
+        // items.forEach(x => {
+        //     old_arr.push(x)
+        // })
+        // // const new_items = this.state.loaded_comments.push.apply(items)
+        // this.setState({
+        //     loaded_comments: old_arr,
+        //     loaded_page_no: page_no
+        // })
 
     }
 
@@ -89,24 +117,47 @@ class Component extends GeneralPage<IProps, IState> {
             // <div style={{height:"300px" , "overflow": "auto" }}
             // ref={(ref) => this.scrollParentRef = ref}
             // >
-            <InfiniteScroll
-                height={300}
-                dataLength={this.state.loaded_comments.length} //This is important field to render the next data
-                next={this.loadFunc.bind(this)}
-                hasMore={true}
-                loader={<h4>Loading...</h4>}
-                endMessage={
-                    <p style={{ textAlign: 'center' }}>
-                        <b>Yay! You have seen it all</b>
-                    </p>
-                }
-            >
-                {this.state.loaded_comments.map(x => {
-                    return (
-                        <Comment model={x}></Comment>
-                    )
-                })}
-            </InfiniteScroll>
+            <div className="comments_page">
+                <InfiniteScroll
+                    dataLength={this.state.loaded_comments.length + 10} //This is important field to render the next data
+                    next={this.loadFunc.bind(this)}
+                    hasMore={true}
+                    scrollThreshold={0.5}
+                    height={window.innerHeight - 44-100}
+                    loader={<h4>Loading...</h4>}
+                    endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                            <b>Yay! You have seen it all</b>
+                        </p>
+                    }
+                >
+                    {this.state.loaded_comments.map(x => {
+                        return (
+                            <Comment model={x}></Comment>
+                        )
+                    })}
+                </InfiniteScroll>
+                <LeaveComment user={this.props.user} post={this.props.model} onAddComment={this.componentDidMount.bind(this)}></LeaveComment>
+            </div>
+
+            // <InfiniteScroll
+            //     height={300}
+            //     dataLength={this.state.loaded_comments.length} //This is important field to render the next data
+            //     next={this.loadFunc.bind(this)}
+            //     hasMore={true}
+            //     loader={<h4>Loading...</h4>}
+            //     endMessage={
+            //         <p style={{ textAlign: 'center' }}>
+            //             <b>Yay! You have seen it all</b>
+            //         </p>
+            //     }
+            // >
+            //     {this.state.loaded_comments.map(x => {
+            //         return (
+            //             <Comment model={x}></Comment>
+            //         )
+            //     })}
+            // </InfiniteScroll>
             // <InfiniteScroll
             //     style={{ height: "300px", "overflow": "auto" }}
             //     pageStart={0}

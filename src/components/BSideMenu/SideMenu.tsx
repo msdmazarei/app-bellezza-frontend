@@ -15,28 +15,47 @@ import { user_repo } from '../../repositories/user_repo';
 import { IRouteConfig } from '../../redux/Actions/route';
 import { SignUpDialog } from '../SignUpDialog/SignUpDialogComponent';
 import { action_close_signup_dialog, action_show_signup_dialog } from '../../redux/Actions/signup';
+import { event_repo } from '../../repositories/event_repo';
 // import { PostNewDesign } from '../PostNewDesign/post_new_design';
-
+import './index.scss'
 
 export interface IProps {
     navigator: Navigator,
     signin_dialog_is_shown?: boolean,
     signup_dialog_is_shown?: boolean,
     logged_in_user?: IUser,
+
     dialog_closed?: () => void,
     signup_dialog_close?: () => void,
     show_signin_dialog?: () => void
     close_app_sidebar?: () => void
     do_logout?: () => void,
     open_signup_dialog?: () => void,
-    change_app_route: (route: IRouteConfig)=> void
+    change_app_route: (route: IRouteConfig) => void
 }
-export interface IState { }
+export interface IState {
+    notification?: number
+}
 
 class Component extends React.Component<IProps, IState> {
-
+    notif_checker_interval: any
     constructor(props: IProps) {
         super(props)
+        this.state = {
+            notification: null
+        }
+        this.notif_checker_interval = setInterval(this.check_notifictations.bind(this), 10000)
+    }
+    componentWillUnmount() {
+        clearInterval(this.notif_checker_interval)
+    }
+    async check_notifictations() {
+        if (this.props.logged_in_user) {
+            const notifs = await event_repo.get_count(this.props.logged_in_user)
+            this.setState({
+                ...this.state, notification: notifs
+            })
+        }
     }
 
     login_menu() {
@@ -61,6 +80,14 @@ class Component extends React.Component<IProps, IState> {
     close_app_sidebar() {
         this.props.close_app_sidebar && this.props.close_app_sidebar();
 
+    }
+    goto_last_events() {
+        console.log("goto_last_events called")
+        this.props.change_app_route && this.props.change_app_route({
+            target_component: COMPONENT_ROUTE_NAME.EventPage,
+            props: {}
+        })
+        this.close_app_sidebar()
     }
 
     goto_post_new_design() {
@@ -100,8 +127,16 @@ class Component extends React.Component<IProps, IState> {
                     <Icon className="fa-user-plus"></Icon>
                     <span>نوشته ها و طرح ها</span>
                 </ListItem>,
-                <ListItem key="notifs">
+                <ListItem key="notifs" className="notifs"
+                    onClick={this.goto_last_events.bind(this)}
+                >
+
+
                     <span>آخرین رخدادها</span>
+                    {(this.state.notification || 0) > 0 &&
+                        <i className="notification">{this.state.notification}</i>
+
+                    }
                 </ListItem>,
                 <ListItem key="logout" onClick={this.logout_menu.bind(this)}>
                     <Icon className="fa-user-plus"></Icon>

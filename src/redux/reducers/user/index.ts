@@ -10,13 +10,15 @@ export function reducer(S: IUser, action: UserAction): IUser {
         case EACTIONS.LOGGED_OUT:
             return null;
     }
-    // if (S==null) return S
-    if (S === undefined) return null;
-    // return {
-    //     id:"msd",
-    //     username:'msd',
-    //     name:"msd"
-    // };
+    if (S===null) return S
+    if (S === undefined) 
+    // return null;
+    return {
+        id:"msd",
+        username:'09360076133',
+        name:"msd",
+        password: "1234"
+    };
     return S
     // if (S == undefined) 
     // return null;

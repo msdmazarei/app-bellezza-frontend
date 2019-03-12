@@ -16,7 +16,7 @@ export interface IGeneralPageProps {
     is_app_sidebar_open?: boolean
     open_app_sidebar?: () => void
     close_app_sidebar?: () => void
-    change_app_route?: (route_config:IRouteConfig) => void
+    change_app_route?: (route_config: IRouteConfig) => void
 }
 
 export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageState> extends React.Component<P, S> {
@@ -25,13 +25,17 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
         super(props);
     }
 
+    componentDidUpdate(prevProps: any, prevState: any) {
+        if ('child_component_did_update' in this)
+            (this as any)['child_component_did_update'](prevProps, prevState)
+    }
     show() {
 
-       this.props.open_app_sidebar && this.props.open_app_sidebar()
+        this.props.open_app_sidebar && this.props.open_app_sidebar()
     }
 
     hide() {
-       this.props.close_app_sidebar && this.props.close_app_sidebar()
+        this.props.close_app_sidebar && this.props.close_app_sidebar()
     }
 
     get_internal_page_content(): React.ReactElement<any> {
@@ -40,8 +44,8 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
             <div></div>
         )
     }
-    back(){
-      
+    back() {
+
         this.props.navigator.popPage()
     }
     renderToolbar() {
@@ -55,18 +59,18 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
                     </ToolbarButton>
                 </div>
                 <div className="left" >
-                {this.props.navigator.routes.length>1 && 
-                
-                <ToolbarButton onClick={this.back.bind(this)}>
-                        <Icon icon='fa-arrow-left' />
-                </ToolbarButton>  }
-                
+                    {this.props.navigator.routes.length > 1 &&
+
+                        <ToolbarButton onClick={this.back.bind(this)}>
+                            <Icon icon='fa-arrow-left' />
+                        </ToolbarButton>}
+
                 </div>
 
             </Toolbar>
         );
     }
-    on_infinit_scroll(){
+    on_infinit_scroll() {
         if ('onInfiniteScroll' in this) {
             (this as any).onInfiniteScroll.apply(arguments)
         }
@@ -75,8 +79,8 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
     render() {
         debugger;
         return (
-            <Page 
-            
+            <Page
+
             >
                 <Splitter>
                     <SplitterSide
@@ -90,16 +94,16 @@ export class GeneralPage<P extends IGeneralPageProps, S extends IGeneralPageStat
                         <SideMenu navigator={this.props.navigator} change_app_route={this.props.change_app_route}></SideMenu>
                     </SplitterSide>
                     <SplitterContent>
-                        <Page 
-                        renderToolbar={this.renderToolbar.bind(this)} 
-                        className={this.state.page_name}
-                        
+                        <Page
+                            renderToolbar={this.renderToolbar.bind(this)}
+                            className={this.state.page_name}
+
                         >
                             {this.get_internal_page_content()}
                         </Page>
                     </SplitterContent>
                 </Splitter>
-                
+
             </Page>
         );
     }

@@ -35,7 +35,8 @@ export class InstaCard extends React.Component<Props, State> {
         this.props.change_app_route({
             target_component: COMPONENT_ROUTE_NAME.PostComment,
             props: {
-                model: this.props.model
+                model: this.props.model,
+                user: this.props.user
             }
         })
     }
@@ -61,13 +62,14 @@ export class InstaCard extends React.Component<Props, State> {
             let r = await p;
             if (this.is_liked_by_me()) {
                 //unlike
-                this.setState({ ...this.state, is_like_by_me: false, likes: this.props.model.likes - 1 })
+                this.setState({ ...this.state, is_like_by_me: false, likes: 
+                    (this.likes() - 1) })
 
             } else {
                 //like
                 this.setState({ ...this.state, 
                     is_like_by_me: true, 
-                    likes:( (this.props.model.likes || 0) + 1 )
+                    likes:( (this.likes() || 0) + 1 )
                 })
             }
         } catch (e) {
@@ -75,11 +77,14 @@ export class InstaCard extends React.Component<Props, State> {
         }
     }
     is_liked_by_me(): boolean {
-        debugger;
+        if(this.state.is_like_by_me!=null)
+        return this.state.is_like_by_me
         return this.state.is_like_by_me || this.props.model.is_liked_by_me || false
 
     }
     likes(): number {
+        if( this.state.likes!= null)
+        return this.state.likes
         return this.state.likes || this.props.model.likes || 0
     }
 
@@ -130,7 +135,7 @@ export class InstaCard extends React.Component<Props, State> {
                         <Comment model={this.props.model.comments[this.props.model.comments.length - 1]}></Comment>
                     }
                     
-                    <LeaveComment user={this.props.user}></LeaveComment>
+                    <LeaveComment user={this.props.user} post={this.props.model}></LeaveComment>
                 </div>
             </div>)
     }

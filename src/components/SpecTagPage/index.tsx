@@ -16,6 +16,8 @@ import { redux_state } from '../../redux/app_state';
 import * as InfiniteScroll from 'react-infinite-scroll-component';
 import { toast_error } from '../../utils';
 import { IUser } from '../../models/user';
+import { IState } from '../ForgetPasswordDialog/ForgetPasswordDialog';
+import { IProps } from '../PostNewDesign/post_new_design';
 export interface ISpecTagPageState extends IGeneralPageState {
     loaded_posts: Array<Post>
     is_action_button_open: boolean
@@ -38,7 +40,11 @@ export class Component extends GeneralPage<ISpecTagPageProps, ISpecTagPageState>
         }
 
     }
-
+    async child_component_did_update(prevp: ISpecTagPageProps,prevS: ISpecTagPageState){
+        if(this.props.user!=prevp.user && this.props.user!=null){
+            this.componentDidMount()
+        }
+    }
 
     flip_action_buttons_state() {
         this.setState({ ...this.state, is_action_button_open: !this.state.is_action_button_open })
@@ -47,10 +53,11 @@ export class Component extends GeneralPage<ISpecTagPageProps, ISpecTagPageState>
         this.setState({ ...this.state, is_action_button_open: false })
     }
 
+   
 
     async componentDidMount() {
         debugger;
-        let posts = await post_repo.get_post(false, Date.now(), 5, this.props.tag)
+        let posts = await post_repo.get_post(false, Date.now(), 5, this.props.tag, this.props.user)
         const old_state = this.state
 
         const new_state: ISpecTagPageState = {
@@ -69,7 +76,7 @@ export class Component extends GeneralPage<ISpecTagPageProps, ISpecTagPageState>
         const last_creation_date = Math.min.apply(null, this.state.loaded_posts.map(x => x.create_unixepoch)
         )
         try {
-            const res = await post_repo.get_post(false, last_creation_date || Date.now(), 5, this.props.tag)
+            const res = await post_repo.get_post(false, last_creation_date || Date.now(), 5, this.props.tag, this.props.user)
             const new_loaded_post = [... this.state.loaded_posts, ...res]
             const u_new_loaded_post = new_loaded_post.filter(this.onlyUnique);
             this.setState({
