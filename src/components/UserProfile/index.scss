@@ -1,0 +1,16 @@
+.profile {
+    .validable-input{
+        direction: rtl;
+    }
+    .buttons{
+        position: fixed;
+        bottom: 11px;
+        width: 100%;
+        text-align: center;
+        .button{
+            width: 80%;
+    text-align: center;
+    margin: auto;
+        }
+    }
+}

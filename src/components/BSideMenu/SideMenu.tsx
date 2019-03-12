@@ -97,6 +97,13 @@ class Component extends React.Component<IProps, IState> {
         })
         this.close_app_sidebar()
     }
+    goto_profile(){
+        this.props.change_app_route && this.props.change_app_route({
+            target_component: COMPONENT_ROUTE_NAME.UserProfile,
+            props: {}
+        })
+        this.close_app_sidebar()
+    }
 
     render() {
         let menu_items = [
@@ -116,6 +123,9 @@ class Component extends React.Component<IProps, IState> {
         ]
         if (this.props.logged_in_user) {
             menu_items = [
+                <ListItem key="profile" onClick={this.goto_profile.bind(this)}>
+                <span>پروفایل</span>
+            </ListItem>,
                 <ListItem key="login" onClick={this.login_menu.bind(this)}>
                     <Icon className="fa-sign-in-alt" ></Icon>
                     <span>پیام های مستفیم</span>

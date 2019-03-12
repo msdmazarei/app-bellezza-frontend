@@ -44,34 +44,31 @@ export class user_repo extends base_repo {
                 throw internal_server_error()
         }
     }
+    static async get(username: string, password: string): Promise<IUser> {
+        return user_repo.authenticate(username,password)
+    }
     static async authenticate(username: string, password: string): Promise<IUser> {
-        try {
-            const res : any = await axios.get<IUser>(`/api/users/profile`, {
+
+        const res = await base_repo.run_http<IUser>(() =>
+            axios.get<IUser>(`/api/users/profile`, {
                 auth: {
                     username: username,
                     password: password
                 }
             })
-            if (http_helper.is_ok_response(res.status)) {
-                return {
-                    id: res.data.id,
-                    create_unixepoch: res.data.creation_date,
-                    modify_unixepoch: res.data.modification_date, 
-                    name: res.data.name,
-                    password: res.data.password,
-                    username: res.data.username
-                }
-                return res.data
-            } else {
-                throw general_error(res.status, "unexpected status", "مقدار غیر منتظره")
-            }
-
-        } catch (e) {
-            const err: AxiosError = e;
-            if (err.response.status == 401) throw unauth_error();
+        )
+        
+        return {
+            ...res.data,
+            id: res.data.id,
+            create_unixepoch: (res.data as any).creation_date,
+            modify_unixepoch: (res.data as any).modification_date,
+            name: res.data.name,
+            password: res.data.password,
+            username: res.data.username,
 
         }
-
+        
     }
 
     static async logout(username: string): Promise<boolean> {

@@ -8,7 +8,8 @@ export enum COMPONENT_ROUTE_NAME {
     TABS="TABS",
     SPEC_TAG_ITEMS="SPEC_TAG_ITEMS",
     PostComment="PostComment",
-    EventPage = "EventPage"
+    EventPage = "EventPage",
+    UserProfile="UserProfile"
 
 }
 export interface redux_state {

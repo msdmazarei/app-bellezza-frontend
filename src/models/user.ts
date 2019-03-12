@@ -7,4 +7,5 @@ export interface IUser extends base_model {
     title?: string
     birthday? : number
     password? : string
+    bio?: string
 }

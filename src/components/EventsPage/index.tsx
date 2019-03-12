@@ -4,14 +4,14 @@ import { event } from '../../models/event';
 import { Event } from '../Event/index'
 import { event_repo as repo } from '../../repositories/event_repo';
 import * as InfiniteScroll from 'react-infinite-scroll-component';
-import {  toast_error } from '../../utils';
+import { toast_error } from '../../utils';
 import { IUser } from '../../models/user';
 
 import './index.scss'
 import { MapDispatchToProps, connect } from 'react-redux';
 import { Dispatch } from 'redux';
 // import { action_login_dialog_closed, action_show_login_dialog } from '../../redux/Actions/login';
-// import { action_close_app_sidebar } from '../../redux/Actions/app_sidebar';
+import { action_close_app_sidebar, action_open_app_sidebar } from '../../redux/Actions/app_sidebar';
 // import { action_user_logged_out } from '../../redux/Actions/user';
 // import { action_show_signup_dialog } from '../../redux/Actions/signup';
 import { redux_state } from '../../redux/app_state';
@@ -45,11 +45,11 @@ class Component extends GeneralPage<IProps, IState> {
     }
     async componentDidMount() {
 
-        let events = await repo.get_events(this.props.user, Date.now(),this.item_load_count)
-        let new_state = {...this.state}
-        if (events.length<this.item_load_count) {
+        let events = await repo.get_events(this.props.user, Date.now(), this.item_load_count)
+        let new_state = { ...this.state }
+        if (events.length < this.item_load_count) {
             new_state.has_more = false
-        }  else {
+        } else {
             new_state.has_more = true
         }
         new_state.loaded_events = events
@@ -67,13 +67,13 @@ class Component extends GeneralPage<IProps, IState> {
             const res = await repo.get_events(this.props.user, last_creation_date || Date.now(), this.item_load_count)
             const new_loaded_post = [... this.state.loaded_events, ...res]
             const u_new_loaded_post = new_loaded_post.filter(this.onlyUnique);
-           let new_state = {...this.state}
-           if(res.length<this.item_load_count){
-               new_state.has_more=false
-           } else {
-               new_state.has_more= true
-           }
-           new_state.loaded_events = u_new_loaded_post
+            let new_state = { ...this.state }
+            if (res.length < this.item_load_count) {
+                new_state.has_more = false
+            } else {
+                new_state.has_more = true
+            }
+            new_state.loaded_events = u_new_loaded_post
             this.setState(new_state)
         } catch (e) {
             toast_error(e)
@@ -92,7 +92,7 @@ class Component extends GeneralPage<IProps, IState> {
     get_internal_page_content(): React.ReactElement<any> {
         debugger;
         return (
-            
+
             // <div style={{height:"300px" , "overflow": "auto" }}
             // ref={(ref) => this.scrollParentRef = ref}
             // >
@@ -112,7 +112,7 @@ class Component extends GeneralPage<IProps, IState> {
                 >
                     {this.state.loaded_events.map(x => {
                         return (
-                            <Event model={x}></Event>
+                            <Event model={x} key={x.id}></Event>
                         )
                     })}
                 </InfiniteScroll>
@@ -124,17 +124,17 @@ class Component extends GeneralPage<IProps, IState> {
 
 const dispatch2props: MapDispatchToProps<{}, {}> = (dispatch: Dispatch) => {
     return {
-        // dialog_closed: () => dispatch(action_login_dialog_closed()),
-        // show_signin_dialog: () => dispatch(action_show_login_dialog()),
-        // close_app_sidebar: () => dispatch(action_close_app_sidebar()),
-        // do_logout: () => dispatch(action_user_logged_out()),
-        // open_signup_dialog: () => dispatch(action_show_signup_dialog())
+        open_app_sidebar: () => dispatch(action_open_app_sidebar()),
+        close_app_sidebar: () => dispatch(action_close_app_sidebar())
+
     }
 }
 
 const state2props = (state: redux_state) => {
     return {
-        user: state.logged_in_user
+        user: state.logged_in_user,
+        is_app_sidebar_open: state.is_app_sidebar_open,
+
     }
 }
 

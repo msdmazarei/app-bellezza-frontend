@@ -9,7 +9,7 @@ import { SpecTagPage } from './SpecTagPage/index';
 import { IRouteConfig } from '../redux/Actions/route';
 import { CommentsPage } from './CommentsPage/index'
 import { eventsPage } from './EventsPage/index'
-
+import { UserProfile } from './UserProfile/index'
 export interface IState {
     navigator: Navigator
 }
@@ -61,6 +61,8 @@ class Component extends React.Component<IProps, IState> {
                 return CommentsPage;
             case COMPONENT_ROUTE_NAME.EventPage:
                 return eventsPage
+            case COMPONENT_ROUTE_NAME.UserProfile:
+                return UserProfile
 
         }
     }

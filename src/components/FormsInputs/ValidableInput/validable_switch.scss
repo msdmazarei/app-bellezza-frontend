@@ -1,0 +1,11 @@
+.validable-switch {
+    direction: rtl;
+    margin: 30px;
+    .switch{
+        margin-right: 50px;
+    }
+    span {
+        vertical-align: sub;
+        color: blue;
+    }
+}
